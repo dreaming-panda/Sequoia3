@@ -12,7 +12,7 @@ A command should be in the format like
     --growmap /home/zhuoming/workspace/Sequoia3/A100_growmaps/68m_7b/growmaps/ \ 
     A100-C4-68m-7b-stochastic.pt  --Mode greedy
 
-`testbed.py` 
+`testbed.py` is for stochastic decoding. `testbed_greedy.py` is for greedy decoding. `test_specinfer.py` is for specinfer sampling. `test_greedyS.py` is for Top-$k$ sampling. 
 
 
 
