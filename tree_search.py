@@ -4,18 +4,19 @@ import json
 from tqdm import tqdm
 import sys
 from copy import deepcopy
-p = torch.tensor([0.0, 8.0018e-01, 8.2898e-02, 3.5243e-02, 1.8637e-02, 1.2422e-02, 8.2803e-03,
-5.6198e-03, 3.7760e-03, 3.7392e-03, 2.6840e-03, 2.4860e-03, 2.1595e-03,
-1.7156e-03, 1.6810e-03, 9.7053e-04, 1.0831e-03, 1.0179e-03, 7.4348e-04,
-6.4076e-04, 8.6870e-04, 3.9868e-04, 4.8652e-04, 5.2439e-04, 3.9510e-04,
-4.0209e-04, 6.2603e-04, 2.6900e-04, 2.7342e-04, 2.9479e-04, 2.4829e-04,
-1.6831e-04, 2.2400e-04])
-
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--config', type=str, default="demo-config.json", help='config')
+args = parser.parse_args()
+print(args)
+with open(args.config, 'r') as f:
+    config = json.load(f)
+p = torch.load(config["acceptance_rate_vector"]).cpu()
 max_branch = p.shape[0] - 1
 
-max_depth = 24
+max_depth = config["max_depth"]
 
-max_budget = 768
+max_budget = config["max_budget"]
 
 T = torch.zeros((max_budget + 1, max_depth + 1, max_branch + 1)).fill_(-torch.inf)
 T_max = torch.zeros((max_budget + 1, max_depth + 1))
@@ -53,25 +54,11 @@ for m in tqdm(range(2, max_budget+1)):
 
 results = T.max(dim=2).values
 print(results)
-draft_inference_time = 0.025
-target_verify_time = [
-5.595182809829712,
+draft_inference_time = config['draft_time']
+target_verify_time = config['target_time']
 
-5.618352077007294,
 
-5.633412539958954,
-
-5.637131311893463,
-
-5.645474750995636,
-
-5.717547333240509,
-
-6.025466053485871,
-
-6.254371635913849                   ]
-
-valid_budget = [1,8,16,64,128,256, 512, 768]
+valid_budget = config['valid_budget']
 
 dec_time = torch.inf
 pairs = None
@@ -140,7 +127,7 @@ grow_map = {
     "size": num_nodes
 }
 
-path = "./L40_growmaps/L40-CNN-7b-70b-stochastic.pt"
+path = config['dst']
 
 torch.save(grow_map, path)
 
