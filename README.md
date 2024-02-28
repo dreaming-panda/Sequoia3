@@ -12,10 +12,12 @@ We recommend the following commands to set up the environment
     pip install typing-extensions
 
 ## Evaluations
-To reproduce the main results (Warning: automatically download C4)
+To reproduce the main results
 
     cd tests
-    bash run.sh
+    bash run_L40.sh
+
+or `bash run_A100.sh`
     
 A command should be in the format like
 
