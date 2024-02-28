@@ -24,6 +24,8 @@ A command should be in the format like
 
     python tree_search.py
 
+`--M` should be set at least `#tree + 256`. 384 is enough for all the experiments except offloading.
+
 
 
 
