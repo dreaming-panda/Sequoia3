@@ -222,7 +222,7 @@ import random
 random.shuffle(eval_list)
 
 if args.dataset == 'openwebtext':
-    tokenized_dataset_eval = load_from_disk("dataset/openwebtext_eval").select(eval_list[args.start :args.end])
+    tokenized_dataset_eval = load_from_disk("../dataset/openwebtext_eval").select(eval_list[args.start :args.end])
 elif args.dataset == 'wiki':
     tokenized_dataset_eval = convert_wiki_dataset(tokenizer=tokenizer).select(eval_list[args.start :args.end])
 elif args.dataset == 'cnn':

@@ -138,7 +138,7 @@ def simulation_greedy(target_model : GraphInferenceEngineTG, draft_model: GraphI
 tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf", use_fast=False)
 tokenizer.pad_token = tokenizer.eos_token
 if args.dataset == 'openwebtext':
-    tokenized_dataset_eval = load_from_disk("dataset/openwebtext_eval").select(list(range(args.start, args.end)))
+    tokenized_dataset_eval = load_from_disk("../dataset/openwebtext_eval").select(list(range(args.start, args.end)))
 elif args.dataset == 'wiki':
     tokenized_dataset_eval = convert_wiki_dataset(tokenizer=tokenizer).select(list(range(args.start, args.end)))
 elif args.dataset == 'cnn':

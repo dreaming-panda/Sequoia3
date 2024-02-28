@@ -222,7 +222,7 @@ tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf", use_fast=F
 tokenizer.pad_token = tokenizer.eos_token
 #tokenizer.add_special_tokens({'pad_token': '[PAD]'})
 if args.dataset == 'openwebtext':
-    tokenized_dataset_eval = load_from_disk("dataset/openwebtext_eval").select(list(range(args.start, args.end)))
+    tokenized_dataset_eval = load_from_disk("../dataset/openwebtext_eval").select(list(range(args.start, args.end)))
 else:
     tokenized_dataset_eval = convert_dataset(tokenizer=tokenizer,file_path=args.dataset).select(list(range(args.start, args.end)))
 
