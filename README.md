@@ -12,7 +12,7 @@ We recommend the following commands to set up the environment
     pip install typing-extensions
 
 ## Evaluations
-To reproduce the main results
+To reproduce the main results (Warning: automatically download C4)
 
     cd tests
     bash run.sh
