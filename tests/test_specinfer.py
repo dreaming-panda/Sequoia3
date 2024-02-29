@@ -9,7 +9,7 @@ from tqdm import tqdm
 from torch.nn.functional import softmax
 from accelerate import Accelerator
 import argparse
-from data_converter import convert_dataset, convert_wiki_dataset, convert_cnn_dataset
+from data_converter import convert_dataset, convert_wiki_dataset, convert_cnn_dataset, convert_c4_dataset_eval
 import argparse
 from Tree.SpecInferTree import SpecInferTree
 import time
@@ -90,7 +90,7 @@ def simulation_fast(target_model : GraphInferenceEngineTG, draft_model: GraphInf
             total_time += (t2 - t1)
             draft_model.clear_kv()
             target_model.clear_kv()
-    print("total time :{:.5f}s, latency :{:.5f}s, decoding step: {}, large model step: {}".format(total_time, total_time / num_decoding_steps, num_decoding_steps, num_large_model_steps))
+    print("total time :{:.5f}s, latency :{:.5f}s, decoding step: {}, large model step: {}, {}".format(total_time, total_time / num_decoding_steps, num_decoding_steps, num_large_model_steps, num_decoding_steps/ num_large_model_steps))
     return num_decoding_steps / num_large_model_steps
 
 
@@ -231,7 +231,7 @@ elif args.dataset == 'wiki':
 elif args.dataset == 'cnn':
     tokenized_dataset_eval = convert_cnn_dataset(tokenizer=tokenizer).select(eval_list[args.start :args.end])
 else:
-    tokenized_dataset_eval = convert_dataset(tokenizer=tokenizer,file_path=args.dataset).select(eval_list[args.start :args.end])
+    tokenized_dataset_eval = convert_c4_dataset_eval(tokenizer=tokenizer).select(eval_list[args.start :args.end])
 data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
 dataloader = DataLoader(tokenized_dataset_eval, batch_size=1, collate_fn=data_collator, shuffle=False)
 
@@ -276,10 +276,10 @@ accelerator = Accelerator()
 dataloader = accelerator.prepare(dataloader)
 
 if args.Mode == 'benchmark':
-    simulation_benchmark(target_model=target_model, draft_model=draft_model, dataloader=dataloader, T=args.T, top_p=args.P, budget=args.B,
+    simulation_benchmark(target_model=target_model, draft_model=draft_model, dataloader=dataloader, T=args.T, top_p=args.P,
                                                max_length=args.M, residual_graph = residual_graph, grow_map = grow_map, sampling_callables=sampling_callables, sample_gather_indices = sample_gather_indices)
 elif args.Mode == 'baseline':
     simulation_baseline(target_model=target_model, dataloader=dataloader, T=args.T, top_p=args.P)
 elif args.Mode == 'greedy':
-    simulation_fast(target_model=target_model, draft_model=draft_model, dataloader=dataloader, T=args.T, top_p=args.P, budget=args.B,
+    simulation_fast(target_model=target_model, draft_model=draft_model, dataloader=dataloader, T=args.T, top_p=args.P,
                                      max_length=args.M, residual_graph = residual_graph, grow_map = grow_map, sampling_callables=sampling_callables, sample_gather_indices = sample_gather_indices)
